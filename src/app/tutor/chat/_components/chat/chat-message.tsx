@@ -1,12 +1,50 @@
 "use client";
+import { elevenlabsKey, voiceId } from "@/lib/const";
 import React, { useState } from "react";
 import Markdown from "react-markdown";
+import { toast } from "sonner";
 
 // TODO: message should be openai response type
 export default function ChatMessage({ message }: { message: any }) {
+    const [isPlayingAudio, setIsPlayingAudio] = useState(false);
     const direction = message.role == "assistant" ? "left" : "right";
     const feedbackHandler = () => {};
-    const voice = () => {};
+    const voice = async () => {
+        if (isPlayingAudio) {
+            toast.warning("Tutor is speaking");
+            return;
+        }
+        setIsPlayingAudio(true);
+        try {
+            const response = await fetch(
+                `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "xi-api-key": elevenlabsKey,
+                    },
+                    body: JSON.stringify({ text: message.content }),
+                }
+            );
+            const result = await response.blob();
+
+            const audioUrl = URL.createObjectURL(result);
+            const audio = new Audio(audioUrl);
+
+            audio.play();
+            await new Promise<void>((resolve) => {
+                audio.addEventListener("ended", () => {
+                    // could execute logic after audio play end
+                    setIsPlayingAudio(false);
+                    resolve();
+                });
+            });
+        } catch (err: any) {
+            console.log(err.message);
+            toast.error("something wrong");
+        }
+    };
     return (
         <div>
             <div
