@@ -6,6 +6,7 @@ type ChatResordStore = {
     setChatMessages: (chatMessages: any[]) => void;
 };
 
+// TODO: should according to tutor setting
 const demoMessage = [
     { role: "system", content: "You are a helpful assistant." },
     {

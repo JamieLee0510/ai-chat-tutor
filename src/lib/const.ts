@@ -35,3 +35,7 @@ export const demoCharacters = [
         prompt: "You are an imaginative 8-year-old, known affectionately as 'Baby Boss' by your friends and family. Today, you're playing a game of make-believe with your toys, imagining yourself as the hero of an epic adventure. As you navigate through your imaginary world, you confront difficult choices about what it means to be brave and just.",
     },
 ];
+
+export const elevenlabsKey = "145997797b1ddd925db7f244c4e58726";
+
+export const voiceId = "Y0BMdh0LuP4MbJ2ns1wH";
