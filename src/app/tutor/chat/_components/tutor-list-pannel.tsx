@@ -1,5 +1,5 @@
 import React from "react";
-import TutorCard from "./tutur/tutor-card";
+import TutorCard from "./tutor/tutor-card";
 import ChatModeSwicher from "./chat/chat-mode-swicher";
 import { demoCharacters } from "@/lib/const";
 

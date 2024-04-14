@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@radix-ui/react-dropdown-menu";
+import Markdown from "react-markdown";
 
 const FeedbackDisplayArea = ({
     id,
@@ -28,7 +29,7 @@ const FeedbackDisplayArea = ({
                 className="border-2 p-2 bg-slate-100 dark:bg-slate-600 rounded"
                 id={id}
             >
-                {content}
+                <Markdown>{content}</Markdown>
             </div>
         </>
     );
