@@ -9,7 +9,7 @@ export default function TutorListPannel() {
             <ChatModeSwicher />
             <div className="flex flex-col gap-4 px-4 mt-4 -mx-2 h-full overflow-auto pb-40">
                 {demoCharacters.map((character) => (
-                    <TutorCard key={character.name} {...character} />
+                    <TutorCard key={character.voiceId} {...character} />
                 ))}
             </div>
         </div>

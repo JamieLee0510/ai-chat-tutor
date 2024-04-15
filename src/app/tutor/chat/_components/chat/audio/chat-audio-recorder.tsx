@@ -17,6 +17,7 @@ import {
     VoiceLoading,
 } from "@/components/icons/record-relate";
 import { useTutorAudioStore } from "../../../_store/audioStore";
+import { useCurrTutorStore } from "../../../_store/tutorStore";
 
 let chunks: any[] = [];
 let mediaRecorder: any = null;
@@ -47,6 +48,7 @@ export default function ChatAudioRecorder() {
         btnStatus.waitingForRecording
     );
     const { chatMessages, setChatMessages } = useChatStore();
+    const { currTutor } = useCurrTutorStore();
 
     const { tutorSpeak } = useTutorAudioStore();
 
@@ -106,7 +108,7 @@ export default function ChatAudioRecorder() {
                         ...newMsgRecords,
                         { role: "assistant", content: tutorResponse },
                     ]);
-                    await tutorSpeak(tutorResponse, () => {
+                    await tutorSpeak(tutorResponse, currTutor!.voiceId, () => {
                         // TODO: 看還有沒有需要啥，在audio播放完畢後
                         resetRecording();
                         setRecording(btnStatus.waitingForRecording);
