@@ -6,6 +6,17 @@ import { generateGptResponse } from "../../_actions/gpt";
 import { GptError } from "@/lib/error";
 import { elevenlabsKey, voiceId } from "@/lib/const";
 import { speakText } from "../../_actions/voice";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+    RecordingAudio,
+    StartRecordAudio,
+    VoiceLoading,
+} from "@/components/icons/record-relate";
 
 let chunks: any[] = [];
 let mediaRecorder: any = null;
@@ -43,6 +54,8 @@ export default function ChatAudioPannel() {
             alert("Your browser does not support recording!");
             return;
         }
+        if (recordingStatus == btnStatus.isRecording) return;
+
         setRecording(btnStatus.isRecording);
         navigator.mediaDevices
             .getUserMedia({
@@ -105,15 +118,50 @@ export default function ChatAudioPannel() {
     return (
         <div>
             ChatAudioPannel
-            <div>
-                {recordingStatus == btnStatus.waitingForRecording ? (
-                    <button onClick={record}>開始錄音</button>
-                ) : recordingStatus == btnStatus.isRecording ? (
-                    <button onClick={stopAndSendRecord}>停止錄音並發送</button>
-                ) : (
-                    <div> 讓我思考一下 </div>
-                )}
-            </div>
+            <TooltipProvider>
+                <div className="w-full min-h-[100px] flex justify-center">
+                    {recordingStatus == btnStatus.waitingForRecording ? (
+                        <Tooltip>
+                            <TooltipTrigger>
+                                <button onClick={record}>
+                                    <div className="w-[45px] h-[45px] bg-[#0d7aefe6] rounded-full p-3">
+                                        <StartRecordAudio />
+                                    </div>
+                                </button>
+                            </TooltipTrigger>
+                            <TooltipContent side="right">
+                                <p>Click and start speaking</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    ) : recordingStatus == btnStatus.isRecording ? (
+                        <Tooltip>
+                            <TooltipTrigger>
+                                <button onClick={stopAndSendRecord}>
+                                    <div className="w-[70px] h-[70px]">
+                                        <RecordingAudio />
+                                    </div>
+                                </button>
+                            </TooltipTrigger>
+                            <TooltipContent side="right">
+                                <p>
+                                    Click to stop recording and send to AI tutor
+                                </p>
+                            </TooltipContent>
+                        </Tooltip>
+                    ) : (
+                        <Tooltip>
+                            <TooltipTrigger>
+                                <div className="w-[70px] h-[70px]">
+                                    <VoiceLoading />
+                                </div>
+                            </TooltipTrigger>
+                            <TooltipContent side="right">
+                                <p>Give AI tutor some time to think</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    )}
+                </div>
+            </TooltipProvider>
         </div>
     );
 }
