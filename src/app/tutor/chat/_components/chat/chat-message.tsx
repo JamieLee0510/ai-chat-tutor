@@ -5,6 +5,8 @@ import Markdown from "react-markdown";
 import { toast } from "sonner";
 import FeedbackDialog from "./feedback-dialog";
 import { generateGptResponse } from "../../_actions/gpt";
+import { speakText } from "../../_actions/voice";
+import { LoadingSpinner } from "@/components/spinner-loader";
 
 const generateFeedbackPrompt = (userText: string) => [
     {
@@ -56,29 +58,8 @@ export default function ChatMessage({ message }: { message: any }) {
         }
         setIsPlayingAudio(true);
         try {
-            const response = await fetch(
-                `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "xi-api-key": elevenlabsKey,
-                    },
-                    body: JSON.stringify({ text: message.content }),
-                }
-            );
-            const result = await response.blob();
-
-            const audioUrl = URL.createObjectURL(result);
-            const audio = new Audio(audioUrl);
-
-            audio.play();
-            await new Promise<void>((resolve) => {
-                audio.addEventListener("ended", () => {
-                    // could execute logic after audio play end
-                    setIsPlayingAudio(false);
-                    resolve();
-                });
+            await speakText(message.content, () => {
+                setIsPlayingAudio(false);
             });
         } catch (err: any) {
             console.log(err.message);
@@ -113,10 +94,11 @@ export default function ChatMessage({ message }: { message: any }) {
                     </span>
                 ) : (
                     <span
-                        className="cursor-pointer flex w-max max-w-[75%] flex-col gap-2 rounded-lg px-3 py-0 text-blue-800 text-[.75rem] underline"
+                        className="cursor-pointer flex w-max max-w-[75%] flex-row items-center gap-2 rounded-lg px-3 py-0 text-blue-800 text-[.75rem] underline"
                         onClick={voice}
                     >
                         Read outloud
+                        {isPlayingAudio && <LoadingSpinner />}
                     </span>
                 )}
             </div>

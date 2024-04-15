@@ -5,6 +5,7 @@ import { useChatStore } from "../../_store/chatStore";
 import { generateGptResponse } from "../../_actions/gpt";
 import { GptError } from "@/lib/error";
 import { elevenlabsKey, voiceId } from "@/lib/const";
+import { speakText } from "../../_actions/voice";
 
 let chunks: any[] = [];
 let mediaRecorder: any = null;
@@ -65,7 +66,6 @@ export default function ChatAudioPannel() {
             setRecording(btnStatus.isLoading);
             formData.append("audio", audioBlob, "recording.mp3");
             try {
-                // TODO: 是不是需要找STT的東西？
                 const response = await fetch("/api/gpt", {
                     method: "POST",
                     body: formData,
@@ -79,7 +79,6 @@ export default function ChatAudioPannel() {
                     ...chatMessages,
                     { role: "user", content: transcription },
                 ];
-                debugger;
                 setChatMessages(newMsgRecords);
 
                 const tutorResponse = (await generateGptResponse(
@@ -93,30 +92,7 @@ export default function ChatAudioPannel() {
                         ...newMsgRecords,
                         { role: "assistant", content: tutorResponse },
                     ]);
-                    const speakingAudioRes = await fetch(
-                        `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
-                        {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "xi-api-key": elevenlabsKey,
-                            },
-                            body: JSON.stringify({ text: tutorResponse }),
-                        }
-                    );
-                    const result = await speakingAudioRes.blob();
-
-                    const audioUrl = URL.createObjectURL(result);
-                    const audio = new Audio(audioUrl);
-
-                    audio.play();
-                    await new Promise<void>((resolve) => {
-                        audio.addEventListener("ended", () => {
-                            // could execute logic after audio play end
-                            //setIsPlayingAudio(false);
-                            resolve();
-                        });
-                    });
+                    await speakText(tutorResponse, () => {});
                 }
             } catch (err: any) {
                 alert(err.message);
