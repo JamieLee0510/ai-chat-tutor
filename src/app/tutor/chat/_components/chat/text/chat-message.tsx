@@ -3,9 +3,9 @@ import { elevenlabsKey, voiceId } from "@/lib/const";
 import React, { useState } from "react";
 import Markdown from "react-markdown";
 import { toast } from "sonner";
-import FeedbackDialog from "./feedback-dialog";
-import { generateGptResponse } from "../../_actions/gpt";
-import { speakText } from "../../_actions/voice";
+import FeedbackDialog from "../feedback-dialog";
+import { generateGptResponse } from "../../../_actions/gpt";
+import { speakText } from "../../../_actions/voice";
 import { LoadingSpinner } from "@/components/spinner-loader";
 
 const generateFeedbackPrompt = (userText: string) => [

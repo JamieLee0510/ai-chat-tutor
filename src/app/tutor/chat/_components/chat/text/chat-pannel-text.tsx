@@ -1,6 +1,6 @@
 "use client";
 
-import { useChatStore } from "../../_store/chatStore";
+import { useChatStore } from "../../../_store/chatStore";
 import ChatMessage from "./chat-message";
 import ChatTextInput from "./chat-text-input";
 

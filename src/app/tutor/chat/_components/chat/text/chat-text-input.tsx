@@ -4,8 +4,8 @@ import { Input } from "@/components/ui/input";
 import React, { useState } from "react";
 import { SendHorizonal } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
-import { generateGptResponse } from "../../_actions/gpt";
-import { useChatStore } from "../../_store/chatStore";
+import { generateGptResponse } from "../../../_actions/gpt";
+import { useChatStore } from "../../../_store/chatStore";
 import { GptError } from "@/lib/error";
 import { toast } from "sonner";
 
