@@ -1,4 +1,6 @@
-export const demoCharacters = [
+import { Tutor } from "./types";
+
+export const demoCharacters: Tutor[] = [
     {
         profileImg: "/profile1.png",
         name: "Monica",
