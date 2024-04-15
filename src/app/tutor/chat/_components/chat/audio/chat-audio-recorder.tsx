@@ -1,10 +1,22 @@
 "use client";
 import React, { useState } from "react";
 import { toast } from "sonner";
-import { useChatStore } from "../../_store/chatStore";
-import { generateGptResponse } from "../../_actions/gpt";
+import { useChatStore } from "../../../_store/chatStore";
+import { generateGptResponse } from "../../../_actions/gpt";
 import { GptError } from "@/lib/error";
-import { elevenlabsKey, voiceId } from "@/lib/const";
+
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+    RecordingAudio,
+    StartRecordAudio,
+    VoiceLoading,
+} from "@/components/icons/record-relate";
+import { useTutorAudioStore } from "../../../_store/audioStore";
 
 let chunks: any[] = [];
 let mediaRecorder: any = null;
@@ -30,18 +42,21 @@ const btnStatus = {
     isRecording: "isRecording",
     isLoading: "isLoading",
 };
-
-export default function ChatAudioPannel() {
+export default function ChatAudioRecorder() {
     const [recordingStatus, setRecording] = useState(
         btnStatus.waitingForRecording
     );
     const { chatMessages, setChatMessages } = useChatStore();
+
+    const { tutorSpeak } = useTutorAudioStore();
 
     const record = () => {
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             alert("Your browser does not support recording!");
             return;
         }
+        if (recordingStatus == btnStatus.isRecording) return;
+
         setRecording(btnStatus.isRecording);
         navigator.mediaDevices
             .getUserMedia({
@@ -65,7 +80,6 @@ export default function ChatAudioPannel() {
             setRecording(btnStatus.isLoading);
             formData.append("audio", audioBlob, "recording.mp3");
             try {
-                // TODO: 是不是需要找STT的東西？
                 const response = await fetch("/api/gpt", {
                     method: "POST",
                     body: formData,
@@ -79,7 +93,6 @@ export default function ChatAudioPannel() {
                     ...chatMessages,
                     { role: "user", content: transcription },
                 ];
-                debugger;
                 setChatMessages(newMsgRecords);
 
                 const tutorResponse = (await generateGptResponse(
@@ -93,51 +106,59 @@ export default function ChatAudioPannel() {
                         ...newMsgRecords,
                         { role: "assistant", content: tutorResponse },
                     ]);
-                    const speakingAudioRes = await fetch(
-                        `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
-                        {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "xi-api-key": elevenlabsKey,
-                            },
-                            body: JSON.stringify({ text: tutorResponse }),
-                        }
-                    );
-                    const result = await speakingAudioRes.blob();
-
-                    const audioUrl = URL.createObjectURL(result);
-                    const audio = new Audio(audioUrl);
-
-                    audio.play();
-                    await new Promise<void>((resolve) => {
-                        audio.addEventListener("ended", () => {
-                            // could execute logic after audio play end
-                            //setIsPlayingAudio(false);
-                            resolve();
-                        });
+                    await tutorSpeak(tutorResponse, () => {
+                        // TODO: 看還有沒有需要啥，在audio播放完畢後
+                        resetRecording();
+                        setRecording(btnStatus.waitingForRecording);
                     });
                 }
             } catch (err: any) {
                 alert(err.message);
-            } finally {
-                resetRecording();
-                setRecording(btnStatus.waitingForRecording);
             }
         }, 0);
     };
     return (
-        <div>
-            ChatAudioPannel
-            <div>
+        <TooltipProvider>
+            <div className="w-full min-h-[100px] flex justify-center">
                 {recordingStatus == btnStatus.waitingForRecording ? (
-                    <button onClick={record}>開始錄音</button>
+                    <Tooltip>
+                        <TooltipTrigger>
+                            <button onClick={record}>
+                                <div className="w-[45px] h-[45px] bg-[#0d7aefe6] rounded-full p-3">
+                                    <StartRecordAudio />
+                                </div>
+                            </button>
+                        </TooltipTrigger>
+                        <TooltipContent side="right">
+                            <p>Click and start speaking</p>
+                        </TooltipContent>
+                    </Tooltip>
                 ) : recordingStatus == btnStatus.isRecording ? (
-                    <button onClick={stopAndSendRecord}>停止錄音並發送</button>
+                    <Tooltip>
+                        <TooltipTrigger>
+                            <button onClick={stopAndSendRecord}>
+                                <div className="w-[70px] h-[70px]">
+                                    <RecordingAudio />
+                                </div>
+                            </button>
+                        </TooltipTrigger>
+                        <TooltipContent side="right">
+                            <p>Click to stop recording and send to AI tutor</p>
+                        </TooltipContent>
+                    </Tooltip>
                 ) : (
-                    <div> 讓我思考一下 </div>
+                    <Tooltip>
+                        <TooltipTrigger>
+                            <div className="w-[70px] h-[70px]">
+                                <VoiceLoading />
+                            </div>
+                        </TooltipTrigger>
+                        <TooltipContent side="right">
+                            <p>Give AI tutor some time to think</p>
+                        </TooltipContent>
+                    </Tooltip>
                 )}
             </div>
-        </div>
+        </TooltipProvider>
     );
 }
