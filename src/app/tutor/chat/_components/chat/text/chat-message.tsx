@@ -7,6 +7,8 @@ import FeedbackDialog from "../feedback-dialog";
 import { generateGptResponse } from "../../../_actions/gpt";
 import { speakText } from "../../../_actions/voice";
 import { LoadingSpinner } from "@/components/spinner-loader";
+import { useCurrTutorStore } from "../../../_store/tutorStore";
+import { useTutorAudioStore } from "../../../_store/audioStore";
 
 const generateFeedbackPrompt = (userText: string) => [
     {
@@ -27,6 +29,8 @@ const generateFeedbackPrompt = (userText: string) => [
 
 // TODO: message should be openai response type
 export default function ChatMessage({ message }: { message: any }) {
+    const { currTutor } = useCurrTutorStore();
+    const { tutorSpeak } = useTutorAudioStore();
     const [isPlayingAudio, setIsPlayingAudio] = useState(false);
     const [isLoadingFeedback, setIsLoadingFeedback] = useState(false);
     const [openFeedback, setOpenFeedback] = useState(false);
@@ -58,9 +62,12 @@ export default function ChatMessage({ message }: { message: any }) {
         }
         setIsPlayingAudio(true);
         try {
-            await speakText(message.content, () => {
+            await tutorSpeak(message.content, currTutor!.voiceId, () => {
                 setIsPlayingAudio(false);
             });
+            // await speakText(message.content, () => {
+            //     setIsPlayingAudio(false);
+            // });
         } catch (err: any) {
             console.log(err.message);
             toast.error("something wrong");

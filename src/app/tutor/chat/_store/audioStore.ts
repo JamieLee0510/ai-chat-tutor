@@ -1,12 +1,16 @@
 "use client";
 import { create } from "zustand";
-import { elevenlabsKey, voiceId } from "@/lib/const";
+import { elevenlabsKey } from "@/lib/const";
 interface TutorAudioState {
     tutorAudio: HTMLAudioElement | null;
     mediaSource: MediaElementAudioSourceNode | null;
     audioContext: AudioContext | null;
     cleanup: () => void;
-    tutorSpeak: (text: string, callback?: () => void) => Promise<void>;
+    tutorSpeak: (
+        text: string,
+        voiceId: string,
+        callback?: () => void
+    ) => Promise<void>;
 }
 
 // due to Next SSR, window is undefined while using outside the component
@@ -34,7 +38,11 @@ export const useTutorAudioStore = create<TutorAudioState>()((set, get) => ({
         }
         set({ tutorAudio: null, mediaSource: null });
     },
-    tutorSpeak: async (text: string, callback?: () => void) => {
+    tutorSpeak: async (
+        text: string,
+        voiceId: string,
+        callback?: () => void
+    ) => {
         const speakingAudioRes = await fetch(
             `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
             {
