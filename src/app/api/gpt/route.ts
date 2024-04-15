@@ -10,11 +10,11 @@ const openai = new OpenAI({
 });
 const writeFileAsync = promisify(fs.writeFile);
 
-export const config = {
-    api: {
-        bodyParser: false, // 必须禁用 Next.js 默认的 JSON 解析器
-    },
-};
+// export const config = {
+//     api: {
+//         bodyParser: false, // 必须禁用 Next.js 默认的 JSON 解析器
+//     },
+// };
 
 // will using openai stt service
 export const POST = async (req: Request) => {

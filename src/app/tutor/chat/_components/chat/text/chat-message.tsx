@@ -71,6 +71,7 @@ export default function ChatMessage({ message }: { message: any }) {
         } catch (err: any) {
             console.log(err.message);
             toast.error("something wrong");
+            setIsPlayingAudio(false);
         }
     };
     return (
