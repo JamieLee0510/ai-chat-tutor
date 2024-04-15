@@ -9,6 +9,7 @@ interface TutorAudioState {
     tutorSpeak: (text: string, callback?: () => void) => Promise<void>;
 }
 
+// due to Next SSR, window is undefined while using outside the component
 const createAudioContext = () => {
     if (typeof window !== "undefined") {
         return new window.AudioContext();
@@ -24,7 +25,6 @@ export const useTutorAudioStore = create<TutorAudioState>()((set, get) => ({
     cleanup: () => {
         const { tutorAudio, mediaSource, audioContext } = get();
         if (tutorAudio && !tutorAudio.paused) {
-            console.log("---call pause in cleanup fun");
             tutorAudio.pause();
             tutorAudio.src = ""; // Clean up the current source
             get().mediaSource?.disconnect(); // Disconnect the media source node
@@ -69,7 +69,7 @@ export const useTutorAudioStore = create<TutorAudioState>()((set, get) => ({
         await get().tutorAudio?.play();
 
         get().tutorAudio!.onended = () => {
-            // 执行任何结束后的回调
+            // execute callbacke function while audio finished
             if (callback) {
                 callback();
             }
