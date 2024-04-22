@@ -19,6 +19,6 @@ export const demoCharacters: Tutor[] = [
     },
 ];
 
-export const elevenlabsKey = "145997797b1ddd925db7f244c4e58726";
+export const elevenlabsKey = process.env.NEXT_PUBLIC_ELEVENLAB_KEY || "";
 
 export const voiceId = "Y0BMdh0LuP4MbJ2ns1wH";

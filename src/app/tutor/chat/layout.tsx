@@ -1,5 +1,6 @@
 import ModeToggle from "@/components/mode-toggle";
 import React from "react";
+import ChatModeSwicher from "./_components/chat/chat-mode-swicher";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
     return (
@@ -22,7 +23,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     </svg>
                 </div>
                 <div className="ml-2 font-bold text-2xl">AI Tutor</div>
-                <ModeToggle className="absolute right-4" />
+                <div className="absolute right-4 flex p-2 space-x-6">
+                    <ChatModeSwicher />
+                    <ModeToggle />
+                </div>
             </header>
             <div className="w-full h-full flex flex-row">{children}</div>
         </main>

@@ -4,7 +4,11 @@ import { Switch } from "@/components/ui/switch";
 import { useEffect, useState } from "react";
 import { ChatMode, useChatStore } from "../../_store/chatStore";
 
-export default function ChatModeSwicher() {
+export default function ChatModeSwicher({
+    className = "",
+}: {
+    className?: string;
+}) {
     const [data, setData] = useState(false);
     const { setChatMode } = useChatStore();
 
@@ -17,7 +21,7 @@ export default function ChatModeSwicher() {
     }, [data]);
 
     return (
-        <div className="flex items-center space-x-2">
+        <div className={`flex items-center space-x-2 ${className}`}>
             <Label htmlFor="airplane-mode">Texting</Label>
             <Switch
                 id="airplane-mode"
