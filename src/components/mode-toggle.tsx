@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Moon, Sun } from "lucide-react";
 
-const ModeToggle = ({ className }: { className: string }) => {
+const ModeToggle = ({ className }: { className?: string }) => {
     const { setTheme } = useTheme();
 
     return (

@@ -1,11 +1,11 @@
 import React from "react";
 import ChatPannel from "./_components/chat-pannel";
-import TutorListPannel from "./_components/tutor-list-pannel";
+import SidePanel from "./_components/side-panel";
 
 export default function Chat() {
     return (
         <>
-            <TutorListPannel />
+            <SidePanel />
             <ChatPannel />
         </>
     );
