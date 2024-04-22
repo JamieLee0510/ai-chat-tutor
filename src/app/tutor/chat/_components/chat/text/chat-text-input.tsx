@@ -19,7 +19,7 @@ export default function ChatTextInput() {
             { role: "user", content: query },
         ];
         setChatMessages(newMsgRecords);
-        const result = await generateGptResponse(newMsgRecords);
+        const result = (await generateGptResponse(newMsgRecords)) as string;
         if (result == GptError.responseErr) {
             toast.error(GptError.responseErr);
         } else {
