@@ -1,3 +1,6 @@
+import { demoMessage } from "@/lib/const";
+import { HistoryMessage, Message } from "@/lib/types";
+import OpenAI from "openai";
 import { useEffect, useState } from "react";
 import { create } from "zustand";
 
@@ -6,25 +9,26 @@ export enum ChatMode {
     Audio = "Audio",
 }
 
-type ChatResordStore = {
-    chatMessages: any[];
-    setChatMessages: (chatMessages: any[]) => void;
+// chat history:{tutorId: string, messages:[]}
+
+export type ChatResordStore = {
+    currChatID: string;
+    setCurrChatID: (currChatID: string) => void;
+    chatMessages: Message[];
+    setChatMessages: (chatMessages: Message[]) => void;
+    chatHistory: HistoryMessage[];
+    setChatHistory: (chatHistory: HistoryMessage[]) => void;
     chatMode: ChatMode;
     setChatMode: (chatMode: ChatMode) => void;
 };
 
-// TODO: should according to tutor setting
-const demoMessage = [
-    { role: "system", content: "You are a helpful assistant." },
-    {
-        role: "assistant",
-        content: "Let start today's conversation",
-    },
-];
-
 export const useChatStore = create<ChatResordStore>()((set) => ({
+    currChatID: "new",
+    setCurrChatID: (currChatID: string) => set({ currChatID }),
     chatMessages: [...demoMessage],
-    setChatMessages: (chatMessages: any[]) => set({ chatMessages }),
+    setChatMessages: (chatMessages: Message[]) => set({ chatMessages }),
+    chatHistory: [],
+    setChatHistory: (chatHistory: HistoryMessage[]) => set({ chatHistory }),
     chatMode: ChatMode.Text,
     setChatMode: (chatMode: ChatMode) => set({ chatMode }),
 }));

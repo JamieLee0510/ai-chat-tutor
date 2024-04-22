@@ -1,11 +1,31 @@
 "use client";
 
-import { useChatStore } from "../../../_store/chatStore";
+import { useShallow } from "zustand/react/shallow";
+import { ChatResordStore, useChatStore } from "../../../_store/chatStore";
 import ChatMessage from "./chat-message";
 import ChatTextInput from "./chat-text-input";
+import { demoMessage } from "@/lib/const";
+import { useMemo } from "react";
+
+const chatSelector = (state: ChatResordStore) => ({
+    currChatID: state.currChatID,
+    chatMessages: state.chatMessages,
+    setChatMessages: state.setChatMessages,
+    chatHistory: state.chatHistory,
+    setChatHistory: state.setChatHistory,
+});
 
 export default function ChatTextPannel() {
-    const { chatMessages } = useChatStore();
+    const { currChatID, chatHistory } = useChatStore(useShallow(chatSelector));
+
+    const chatMessages = useMemo(() => {
+        if (currChatID == "new") return demoMessage;
+        console.log("chatHistory:", chatHistory);
+        console.log("currChatID:", currChatID);
+        console.log(chatHistory.filter((chat) => chat.chatId == currChatID));
+        return chatHistory.filter((chat) => chat.chatId == currChatID)[0]
+            .messages;
+    }, [chatHistory, currChatID]);
 
     return (
         <>
