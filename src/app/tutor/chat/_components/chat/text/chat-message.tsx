@@ -9,6 +9,7 @@ import { speakText } from "../../../_actions/voice";
 import { LoadingSpinner } from "@/components/spinner-loader";
 import { useCurrTutorStore } from "../../../_store/tutorStore";
 import { useTutorAudioStore } from "../../../_store/audioStore";
+import { Message } from "@/lib/types";
 
 const generateFeedbackPrompt = (userText: string) => [
     {
@@ -27,10 +28,10 @@ const generateFeedbackPrompt = (userText: string) => [
     },
 ];
 
-// TODO: message should be openai response type
-export default function ChatMessage({ message }: { message: any }) {
+export default function ChatMessage({ message }: { message: Message }) {
     const { currTutor } = useCurrTutorStore();
     const { tutorSpeak } = useTutorAudioStore();
+
     const [isPlayingAudio, setIsPlayingAudio] = useState(false);
     const [isLoadingFeedback, setIsLoadingFeedback] = useState(false);
     const [openFeedback, setOpenFeedback] = useState(false);
@@ -85,13 +86,13 @@ export default function ChatMessage({ message }: { message: any }) {
             <div>
                 <div
                     className={
-                        "flex w-max max-w-[75%] flex-col gap-2 rounded-lg px-3 py-2 text-sm  " +
+                        "flex w-fit max-w-[75%] flex-col gap-2 rounded-lg px-3 py-2 text-sm text-wrap  " +
                         (direction == "left"
                             ? "bg-gray-300 dark:bg-gray-900"
                             : " ml-auto bg-blue-600 text-white")
                     }
                 >
-                    <Markdown>{message.content}</Markdown>
+                    <Markdown className="w-full">{message.content}</Markdown>
                 </div>
                 {direction == "right" ? (
                     <span

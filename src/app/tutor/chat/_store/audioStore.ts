@@ -48,7 +48,6 @@ export const useTutorAudioStore = create<TutorAudioState>()((set, get) => ({
             body: JSON.stringify({ text, voiceId }),
         });
         const result = await speakingAudioRes.blob();
-        debugger;
         const audioUrl = URL.createObjectURL(result);
         const { tutorAudio } = get();
         if (tutorAudio) {
