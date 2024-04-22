@@ -43,18 +43,12 @@ export const useTutorAudioStore = create<TutorAudioState>()((set, get) => ({
         voiceId: string,
         callback?: () => void
     ) => {
-        const speakingAudioRes = await fetch(
-            `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "xi-api-key": elevenlabsKey,
-                },
-                body: JSON.stringify({ text: text }),
-            }
-        );
+        const speakingAudioRes = await fetch("/api/voice", {
+            method: "POST",
+            body: JSON.stringify({ text, voiceId }),
+        });
         const result = await speakingAudioRes.blob();
+        debugger;
         const audioUrl = URL.createObjectURL(result);
         const { tutorAudio } = get();
         if (tutorAudio) {

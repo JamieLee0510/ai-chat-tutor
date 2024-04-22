@@ -18,12 +18,8 @@ export default function SidePanel() {
                 <TabsContent value="Tutors" className="pt-5">
                     <TutorListPannel />
                 </TabsContent>
-                <TabsContent value="Records">
-                    Change your password here.
-                </TabsContent>
-                <TabsContent value="Uploads">
-                    Change your password here.
-                </TabsContent>
+                <TabsContent value="Records">message history</TabsContent>
+                <TabsContent value="Uploads">will upload file</TabsContent>
             </Tabs>
         </div>
     );
