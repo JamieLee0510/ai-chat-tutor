@@ -16,16 +16,19 @@ const chatSelector = (state: ChatResordStore) => ({
 });
 
 export default function ChatTextPannel() {
-    const { currChatID, chatHistory } = useChatStore(useShallow(chatSelector));
+    const { currChatID, chatHistory, chatMessages } = useChatStore(
+        useShallow(chatSelector)
+    );
 
-    const chatMessages = useMemo(() => {
-        if (currChatID == "new") return demoMessage;
-        console.log("chatHistory:", chatHistory);
-        console.log("currChatID:", currChatID);
-        console.log(chatHistory.filter((chat) => chat.chatId == currChatID));
-        return chatHistory.filter((chat) => chat.chatId == currChatID)[0]
-            .messages;
-    }, [chatHistory, currChatID]);
+    // TODO: history
+    // const chatMessages = useMemo(() => {
+    //     if (currChatID == "new") return demoMessage;
+    //     console.log("chatHistory:", chatHistory);
+    //     console.log("currChatID:", currChatID);
+    //     console.log(chatHistory.filter((chat) => chat.chatId == currChatID));
+    //     return chatHistory.filter((chat) => chat.chatId == currChatID)[0]
+    //         .messages;
+    // }, [chatHistory, currChatID]);
 
     return (
         <>

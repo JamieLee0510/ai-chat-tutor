@@ -11,7 +11,9 @@ export default function SidePanel() {
             <Tabs defaultValue="Tutors" className="w-full">
                 <TabsList className="w-full  dark:bg-slate-600 bg-slate-300">
                     <TabsTrigger value="Tutors">Tutors</TabsTrigger>
-                    <TabsTrigger value="Records">Records</TabsTrigger>
+                    <TabsTrigger disabled={true} value="Records">
+                        Records
+                    </TabsTrigger>
                     <TabsTrigger
                         value="Uploads"
                         disabled={true}

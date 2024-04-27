@@ -22,7 +22,7 @@ const tutorSelector = (state: TutorInfoState) => ({
     currTutor: state.currTutor,
 });
 
-const HistoryCard = ({ chatId, tutorId, title, messages }: HistoryMessage) => {
+const HistoryCard = ({ chatId, tutorId, title }: HistoryMessage) => {
     const { currChatID, setCurrChatID } = useChatStore(
         useShallow(chatSelector)
     );
