@@ -50,7 +50,7 @@ export default function ChatTextInput() {
     };
 
     return (
-        <div className="flex w-full gap-6  items-center sticky bottom-2">
+        <div className="sticky bottom-4 flex w-full gap-6 items-center">
             {/* TODO: currently use Input to control user's input;
             might need Auto-grow textarea to control
           */}

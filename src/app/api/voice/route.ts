@@ -23,6 +23,5 @@ export const POST = async (req: NextRequest) => {
 
     headers.set("Content-Type", "audio/mpeg");
 
-    // or just use new Response ❗️
     return new NextResponse(blob, { status: 200, statusText: "OK", headers });
 };
