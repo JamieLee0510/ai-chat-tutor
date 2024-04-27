@@ -121,7 +121,7 @@ export default function ChatAudioRecorder() {
     };
     return (
         <TooltipProvider>
-            <div className="w-full min-h-[100px] flex justify-center">
+            <div className="w-full sticky bottom-4 flex justify-center">
                 {recordingStatus == btnStatus.waitingForRecording ? (
                     <Tooltip>
                         <TooltipTrigger>
