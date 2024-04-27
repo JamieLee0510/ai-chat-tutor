@@ -1,8 +1,6 @@
 "use client";
 import React from "react";
 import TutorInfo from "./tutor/turtor-info";
-import ChatMessage from "./chat/text/chat-message";
-import ChatTextInput from "./chat/text/chat-text-input";
 import { ChatMode, useChatStore } from "../_store/chatStore";
 import ChatTextPannel from "./chat/text/chat-pannel-text";
 import ChatAudioPannel from "./chat/audio/chat-pannel-audio";
@@ -10,7 +8,7 @@ import ChatAudioPannel from "./chat/audio/chat-pannel-audio";
 export default function ChatPannel() {
     const { chatMode } = useChatStore();
     return (
-        <div className="w-full h-full flex flex-col  p-6 border shadow-md relative">
+        <div className="w-full h-full flex flex-col  p-6 border shadow-md">
             <TutorInfo />
 
             {chatMode == ChatMode.Text && <ChatTextPannel />}

@@ -1,7 +1,5 @@
 import { demoMessage } from "@/lib/const";
 import { HistoryMessage, Message } from "@/lib/types";
-import OpenAI from "openai";
-import { useEffect, useState } from "react";
 import { create } from "zustand";
 
 export enum ChatMode {

@@ -5,20 +5,32 @@ import React, { useState } from "react";
 import { SendHorizonal } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { generateGptResponse } from "../../../_actions/gpt";
-import { useChatStore } from "../../../_store/chatStore";
+import { ChatResordStore, useChatStore } from "../../../_store/chatStore";
 import { GptError } from "@/lib/error";
 import { toast } from "sonner";
+import { useShallow } from "zustand/react/shallow";
+
+const chatSelector = (state: ChatResordStore) => ({
+    chatMessages: state.chatMessages,
+    setChatMessages: state.setChatMessages,
+});
 
 export default function ChatTextInput() {
     const [query, setQuery] = useState("");
-    const { chatMessages, setChatMessages } = useChatStore();
+    const [isChatting, setIsChatting] = useState(false);
+    const { chatMessages, setChatMessages } = useChatStore(
+        useShallow(chatSelector)
+    );
 
     const responseHandler = async () => {
+        if (isChatting) return;
         const newMsgRecords = [
             ...chatMessages,
             { role: "user", content: query },
         ];
+        setQuery("");
         setChatMessages(newMsgRecords);
+        setIsChatting(true);
         const result = (await generateGptResponse(newMsgRecords)) as string;
         if (result == GptError.responseErr) {
             toast.error(GptError.responseErr);
@@ -28,10 +40,17 @@ export default function ChatTextInput() {
                 { role: "assistant", content: result },
             ]);
         }
+        setIsChatting(false);
+    };
+
+    const keydownHandler = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "Enter") {
+            responseHandler();
+        }
     };
 
     return (
-        <div className="flex w-full gap-6  items-center">
+        <div className="sticky bottom-4 flex w-full gap-6 items-center">
             {/* TODO: currently use Input to control user's input;
             might need Auto-grow textarea to control
           */}
@@ -39,8 +58,10 @@ export default function ChatTextInput() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Enter your response"
+                onKeyDown={keydownHandler}
+                disabled={isChatting}
             />
-            <Button onClick={responseHandler}>
+            <Button onClick={responseHandler} disabled={isChatting}>
                 <SendHorizonal />
             </Button>
         </div>
